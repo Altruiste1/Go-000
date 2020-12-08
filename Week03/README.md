@@ -1,15 +1,10 @@
 学习笔记
-## 超时控制
-
-服务端埋点
-
-listdirectory 的三种方式
-
-# 避免goroutine泄漏
+[toc]
+## goroutine
 注意三件事
 - 知道什么时候退出
 - 能控制什么时候退
-- 超时控制
+- 超时控制 （利用context）
 
 ## memory model
 ### 内存重排
@@ -24,6 +19,17 @@ cpu内存重排 mem内存重排 go mem model
 
 ## context
 - context尽量显式地放入到函数签名中，而不是放到结构体里
+
+## errgroup
+https://pkg.go.dev/golang.org/x/sync/errgroup<br>
+Package errgroup provides synchronization, error propagation, and Context cancelation for groups of goroutines working on subtasks of a common task.
+
+- 其中errgroup包中有两个地方会有点坑
+1. func WithContext(ctx context.Context) (*Group, context.Context)<br>
+返回的context作用域仅仅在WithContext里,使用这个值无实际意义
+2. func (g *Group) Go(f func() error) <br>
+ 这个方法里启用了一个新的goroutine，但是未对可能出现的panic进行recover,因此使用这个函数时需慎用，或者在这个方法的goroutine里手动加入recover使用
+
 
 ## 一些名词
 - 染色信息
